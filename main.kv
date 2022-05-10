@@ -1,0 +1,318 @@
+WindowManager:
+    StartPage:
+        name: "start"
+    MainPage:
+        name: "main"
+    SettingPage:
+        name: "setting"
+
+<StartPage>:
+    name: "start"
+    on_enter: root.reset_data()
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: "320dp", "100dp"
+            pos_hint: {'center_x':.5, 'center_y': .5}
+            spacing: "50dp"
+            AnchorLayout:
+                anchor_y: 'top'
+                size_hint_y: 1
+                Label:
+                    text: "Wprowadź IP:"
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+                    pos: self.pos
+            AnchorLayout:
+                anchor_y: 'center'
+                BoxLayout:
+                    size_hint: .6, .2
+                    pos_hint: {'center_x':.5, 'center_y': .5}
+                    spacing: "20dp"
+                    AnchorLayout:
+                        anchor_x: 'left'
+                        size_hint_y: 1
+                        TextInput:
+                            id: IP
+                            multiline: False
+                            halign: 'center'
+                            valign: 'center'
+                            size: "150dp", "40dp"
+                            pos: self.pos
+                            size_hint: None, None
+                            on_touch_down: IP.text = ''
+                    AnchorLayout:
+                        anchor_x: 'right'
+                        size_hint_x: None
+                        Button:
+                            pos: self.pos
+                            size: "40dp", "40dp"
+                            size_hint: None, None
+                            text: "Połącz"
+                            on_press:
+                                root.connect_button(is_connect)
+                                root.manager.get_screen("main").thread_send()
+                                root.manager.transition.direction = 'left'
+            AnchorLayout:
+                anchor_y: 'bottom'
+                size_hint_y: 1
+                Label:
+                    id: is_connect
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+
+<MainPage>:
+    name: "main"
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: "20dp"
+        padding: ("20dp", "20dp", "20dp", "20dp")
+
+        AnchorLayout:
+            anchor_y: 'top'
+            size: 100, "50dp"
+            size_hint_y: None
+            AnchorLayout:
+                anchor_x: 'left'
+                anchor_y: 'top'
+                size_hint_x: 1
+
+                Button:
+                    text: "rozłącz"
+                    size: "50dp", "50dp"
+                    size_hint: None, None
+                    on_press:
+                        root.disconnect_button()
+                        root.manager.transition.direction = 'right'
+            AnchorLayout:
+                anchor_x: 'right'
+                anchor_y: 'top'
+                size_hint_x: 1
+
+                Button:
+                    text: "Info"
+                    size: "50dp", "50dp"
+                    size_hint: None, None
+                    on_press:
+                        app.root.current = 'setting'
+                        root.manager.transition.direction = 'left'
+        BoxLayout:
+            spacing: "30dp"
+            orientation: "vertical"
+            BoxLayout:
+                spacing: "5dp"
+                size: 100, "60dp"
+                size_hint: 1, None
+                orientation: "vertical"
+                Label:
+                    id: recv_info
+                    halign: 'center'
+                    valign: 'middle'
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+                    pos_hint: {"center_x": .5}
+                    text: 'Otrzymywana ramka danych:'
+                Label:
+                    id: recv
+                    halign: 'center'
+                    valign: 'middle'
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+                    pos_hint: {"center_x": .5}
+                    text: ''
+
+            BoxLayout:
+                spacing: "5dp"
+                size: 100, "60dp"
+                size_hint: 1, None
+                orientation: "vertical"
+                Label:
+                    id: send_info
+                    halign: 'center'
+                    valign: 'middle'
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+                    pos_hint: {"center_x": .5}
+                    text: 'Przesyłana ramka danych:'
+                TextInput:
+                    id: send
+                    multiline: False
+                    halign: 'center'
+                    valign: 'middle'
+                    size: "150dp", "30dp"
+                    size_hint: None, None
+                    pos_hint: {"center_x": .5}
+                    text: '[000000]'
+
+            BoxLayout:
+                spacing: "30dp"
+                size: "200dp", "50dp"
+                size_hint: None, None
+                pos_hint: {"center_x": .5, "center_y": .2}
+                ToggleButton:
+                    id: LED1
+                    group: 'LEDs'
+                    text: "LED1"
+                    size: "50dp", "50dp"
+                    on_state:
+                        root.update_led1_value(self.state, send)
+
+                ToggleButton:
+                    id: LED2
+                    group: 'LEDs'
+                    text: "LED2"
+                    size: "50dp", "50dp"
+                    on_state:
+                        root.update_led2_value(self.state, send)
+
+            AnchorLayout:
+                anchor_y: "top"
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: "60dp"
+                    size_hint: 1 , None
+                    size: 100, "100dp"
+                    pos_hint: {"center_x": .5, "center_y": .2}
+                    Slider:
+                        id: left
+                        min: -128
+                        max: 127
+                        step: 1
+                        on_value: root.update_left_slider_values(left, send)
+                        orientation: 'horizontal'
+                    Slider:
+                        id: right
+                        min: -128
+                        max: 127
+                        step: 1
+                        on_value: root.update_right_slider_values(right, send)
+                        orientation: 'horizontal'
+
+<SettingPage>:
+    name: "setting"
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "20dp"
+        padding: ("20dp", "20dp", "20dp", "20dp")
+        AnchorLayout:
+            anchor_y: "top"
+            anchor_x: "left"
+            size: 100, "50dp"
+            size_hint_y: None
+            Button:
+                text: "Info"
+                size: "50dp", "50dp"
+                size_hint: None, None
+                pos_hint: {'left': 1, 'top': 1}
+                on_press:
+                    app.root.current = 'main'
+                    root.manager.transition.direction = 'right'
+        BoxLayout:
+        # d007 - max; 2000 - min
+            spacing: "25dp"
+            orientation: "vertical"
+
+            BoxLayout:
+                orientation: "vertical"
+                size: "80dp", "50dp"
+                size_hint: 1, None
+                pos_hint: {"center_x": 0.5}
+                spacing: "0dp"
+                BoxLayout:
+                    size: "20dp", "10dp"
+                    size_hint: 1, None
+                    Label:
+                        id: state_info
+                        text: "Stan robota:"
+                        size: "20dp", "10dp"
+                BoxLayout:
+                    size: "20dp", "40dp"
+                    size_hint: 1, None
+                    pos_hint: {"top": 1}
+                    cols: 1
+                    Label:
+                        id: state_label
+                        text: ''
+                        size_hint: 0.5, 1
+                        text_size: self.size
+                        halign: 'center'
+
+            BoxLayout:
+                orientation: "vertical"
+                size: "300dp", "40dp"
+                size_hint: 1, None
+                spacing: "20dp"
+                Label:
+                    id: battery_info
+                    text: "Poziom nałdowania robota:"
+                Label:
+                    id: battery_widget
+                    text: ''
+            AnchorLayout:
+                anchor_y: "top"
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: "10dp"
+                    size_hint: 1 , None
+                    size: 100, "180dp"
+                    Label:
+                        id: sensors_info
+                        size: "150dp", "30dp"
+                        text: "Odczyt z sensorów światła:"
+                    WaterFill:
+                        id: sensor1_widget
+                        color: 1, 1, 0
+                        level: 0
+                        size: 100, "20dp"
+                        size_hint: 1, None
+                    WaterFill:
+                        id: sensor2_widget
+                        color: 1, 1, 0
+                        level: 0
+                        size: 100, "20dp"
+                        size_hint: 1, None
+                    WaterFill:
+                        id: sensor3_widget
+                        color: 1, 1, 0
+                        level: 0
+                        size: 100, "20dp"
+                        size_hint: 1, None
+                    WaterFill:
+                        id: sensor4_widget
+                        color: 1, 1, 0
+                        level: 0
+                        size: 100, "20dp"
+                        size_hint: 1, None
+                    WaterFill:
+                        id: sensor5_widget
+                        color: 1, 1, 0
+                        level: 0
+                        size: 100, "20dp"
+                        size_hint: 1, None
+
+<WaterFill@Widget>:
+    level: 0.1
+    width: root.width
+    size_hint: 1, 1
+    color: 0, 0, 1
+    canvas:
+        StencilPush
+        Rectangle:
+            pos: root.pos
+            size: root.size
+
+        StencilUse
+
+        Color:
+            rgb: 1, 1, 0
+        Rectangle:
+            pos: root.pos
+            size: (root.level*root.width, root.height)
+
+        StencilUnUse
+
+        StencilPop
