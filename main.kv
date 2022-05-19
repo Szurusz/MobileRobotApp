@@ -172,26 +172,90 @@ WindowManager:
 
             AnchorLayout:
                 anchor_y: "top"
-                BoxLayout:
-                    orientation: "vertical"
-                    spacing: "60dp"
-                    size_hint: 1 , None
-                    size: 100, "100dp"
-                    pos_hint: {"center_x": .5, "center_y": .2}
-                    Slider:
-                        id: left
-                        min: -128
-                        max: 127
-                        step: 1
-                        on_value: root.update_left_slider_values(left, send)
-                        orientation: 'horizontal'
-                    Slider:
-                        id: right
-                        min: -128
-                        max: 127
-                        step: 1
-                        on_value: root.update_right_slider_values(right, send)
-                        orientation: 'horizontal'
+                TabbedPanel:
+                    id: tabs
+                    size: "50dp","200dp"
+                    size_hint: 1, None
+                    tab_pos: 'bottom_mid'
+                    do_default_tab: False
+                    TabbedPanelItem:
+                        id: sliders
+                        text: "Suwaki"
+                        on_press: root.reset_tabs()
+                        BoxLayout:
+                            padding: ("20dp", "40dp", "20dp", "20dp")
+                            orientation: "vertical"
+                            spacing: "50dp"
+                            size_hint: 1 , None
+                            size: 100, "140dp"
+                            pos_hint: {"center_x": .5, "center_y": .5}
+                            Slider:
+                                id: left_slider
+                                min: -128
+                                max: 127
+                                step: 1
+                                on_value: root.update_left_slider_values(left_slider, send)
+                                orientation: 'horizontal'
+                            Slider:
+                                id: right_slider
+                                min: -128
+                                max: 127
+                                step: 1
+                                on_value: root.update_right_slider_values(right_slider, send)
+                                orientation: 'horizontal'
+                    TabbedPanelItem:
+                        id: arrows
+                        text: "Strzałki"
+                        on_press: root.reset_tabs()
+                        BoxLayout:
+                            padding: ("20dp", "20dp", "20dp", "20dp")
+                            Slider:
+                                id: speed
+                                min: 0
+                                max: 127
+                                step: 1
+                                orientation: "vertical"
+                            BoxLayout:
+                                spacing: "10dp"
+                                orientation: "vertical"
+                                pos_hint: {"center_x": .5, "center_y": .5}
+                                Button:
+                                    id: up
+                                    text: "up"
+                                    on_press:
+                                        root.update_arrows("up", "press", speed, angle, send)
+                                    on_release:
+                                        root.update_arrows("up", "release", speed, angle, send)
+                                BoxLayout:
+                                    spacing: "10dp"
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    Button:
+                                        id: left
+                                        text: "left"
+                                        on_press:
+                                            root.update_arrows("left", "press", speed, angle, send)
+                                        on_release:
+                                            root.update_arrows("left", "release", speed, angle, send)
+                                    Button:
+                                        id: down
+                                        text: "down"
+                                        on_press:
+                                            root.update_arrows("down", "press", speed, angle, send)
+                                        on_release:
+                                            root.update_arrows("down", "release", speed, angle, send)
+                                    Button:
+                                        id: right
+                                        text: "right"
+                                        on_press:
+                                            root.update_arrows("right", "press", speed, angle, send)
+                                        on_release:
+                                            root.update_arrows("right", "release", speed, angle, send)
+                            Slider:
+                                id: angle
+                                min: 0.1
+                                max: 0.9
+                                step: 0.1
+                                orientation: "vertical"
 
 <SettingPage>:
     name: "setting"

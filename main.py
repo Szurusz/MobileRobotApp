@@ -15,7 +15,7 @@ from kivy.core.window import Window
 
 # warunek rozmiaru okna dla systemów innych niż android
 if kivy.platform != 'android' or kivy.platform != 'ios':
-    Window.size = (700, 500)
+    Window.size = (700, 600)
 
 
 class StartPage(Screen):
@@ -42,6 +42,13 @@ class StartPage(Screen):
 
 
 class MainPage(Screen):
+
+    def __init__(self, **kwargs):
+        super(MainPage, self).__init__(**kwargs)
+        if kivy.platform != 'android' or kivy.platform != 'ios':
+            self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+            self._keyboard.bind(on_key_down=self._on_keyboard_down)
+            self._keyboard.bind(on_key_up=self._on_keyboard_up)
 
     def lost_connection(self):
         self.manager.current = 'start'
@@ -79,7 +86,7 @@ class MainPage(Screen):
     def get_sensor_vals(self, recv):
         recv_list = list(recv)
         state = int("".join(recv_list[1:3]), 16)
-        battery = int("".join(recv_list[3:7]), 16)
+        battery = round((int("".join(recv_list[3:7]), 16)*4800)/49170, 2)
         sensor1 = int("".join(recv_list[7:11]), 16)
         sensor2 = int("".join(recv_list[11:15]), 16)
         sensor3 = int("".join(recv_list[15:19]), 16)
@@ -114,7 +121,7 @@ class MainPage(Screen):
                 state_label.text = "Błąd połączenia z robotem Pololu3Pi"
             case _:
                 pass
-        battery_widget.text = str(data[1])
+        battery_widget.text = str(data[1])+"mV"
         sensor1_widget.level = data[2] / max_sensor_level
         sensor2_widget.level = data[3] / max_sensor_level
         sensor3_widget.level = data[4] / max_sensor_level
@@ -163,6 +170,181 @@ class MainPage(Screen):
         data_list[6] = slider_text[1]
         data.text = "".join(data_list)
 
+    def update_arrows(self, button, on_state, speed_slider, angle_slider, data):
+        if on_state == "press":
+            match button:
+                case "up":
+                    GlobalShared.info_arrows[0] = 1
+                case "left":
+                    GlobalShared.info_arrows[1] = 1
+                case "down":
+                    GlobalShared.info_arrows[2] = 1
+                case "right":
+                    GlobalShared.info_arrows[3] = 1
+                case _:
+                    pass
+
+        elif on_state == "release":
+            match button:
+                case "up":
+                    GlobalShared.info_arrows[0] = 0
+                case "left":
+                    GlobalShared.info_arrows[1] = 0
+                case "down":
+                    GlobalShared.info_arrows[2] = 0
+                case "right":
+                    GlobalShared.info_arrows[3] = 0
+                case _:
+                    pass
+
+        if GlobalShared.info_arrows == [1, 0, 0, 0]:  # góra
+            speed = int(speed_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = speed_text[0]
+            data_list[4] = speed_text[1]
+            # prawe koło
+            data_list[5] = speed_text[0]
+            data_list[6] = speed_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [1, 1, 0, 0]:  # góra - lewo
+            speed = int(speed_slider.value)
+            angle = int(speed_slider.value*angle_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            angle_text = list(format(angle, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = angle_text[0]
+            data_list[4] = angle_text[1]
+            # prawe koło
+            data_list[5] = speed_text[0]
+            data_list[6] = speed_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [1, 0, 0, 1]:  # góra - prawo
+            speed = int(speed_slider.value)
+            angle = int(speed_slider.value*angle_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            angle_text = list(format(angle, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = speed_text[0]
+            data_list[4] = speed_text[1]
+            # prawe koło
+            data_list[5] = angle_text[0]
+            data_list[6] = angle_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [0, 0, 1, 0]:  # dół
+            if int(speed_slider.value) == 0:
+                speed = 0
+            else:
+                speed = 256 - int(speed_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = speed_text[0]
+            data_list[4] = speed_text[1]
+            # prawe koło
+            data_list[5] = speed_text[0]
+            data_list[6] = speed_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [0, 1, 1, 0]:  # dół - lewo
+            if int(speed_slider.value) == 0:
+                speed = 0
+                angle = 0
+            else:
+                speed = 256 - int(speed_slider.value)
+                angle = 256 - int(speed_slider.value*angle_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            angle_text = list(format(angle, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = angle_text[0]
+            data_list[4] = angle_text[1]
+            # prawe koło
+            data_list[5] = speed_text[0]
+            data_list[6] = speed_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [0, 0, 1, 1]:  # dół - prawo
+            if int(speed_slider.value) == 0:
+                speed = 0
+                angle = 0
+            else:
+                speed = 256 - int(speed_slider.value)
+                angle = 256 - int(speed_slider.value * angle_slider.value)
+            speed_text = list(format(speed, 'x').zfill(2))
+            angle_text = list(format(angle, 'x').zfill(2))
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = speed_text[0]
+            data_list[4] = speed_text[1]
+            # prawe koło
+            data_list[5] = angle_text[0]
+            data_list[6] = angle_text[1]
+            data.text = "".join(data_list)
+
+        elif GlobalShared.info_arrows == [0, 0, 0, 0] or GlobalShared.info_arrows == [0, 0, 0, 1] or\
+                GlobalShared.info_arrows == [0, 1, 0, 0] or GlobalShared.info_arrows == [1, 0, 1, 0]:
+            data_list = list(data.text)
+            # lewe koło
+            data_list[3] = '0'
+            data_list[4] = '0'
+            # prawe koło
+            data_list[5] = '0'
+            data_list[6] = '0'
+            data.text = "".join(data_list)
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, b, keycode, c, d):
+        if keycode[1] == 'w' or keycode[1] == 'up':
+            self.ids.up.state = "down"
+            self.update_arrows("up", "press", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 's' or keycode[1] == 'down':
+            self.ids.down.state = "down"
+            self.update_arrows("down", "press", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 'a' or keycode[1] == 'left':
+            self.ids.left.state = "down"
+            self.update_arrows("left", "press", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 'd' or keycode[1] == 'right':
+            self.ids.right.state = "down"
+            self.update_arrows("right", "press", self.ids.speed, self.ids.angle, self.ids.send)
+        return True
+
+    def _on_keyboard_up(self, a, keycode):
+        if keycode[1] == 'w' or keycode[1] == 'up':
+            self.ids.up.state = "normal"
+            self.update_arrows("up", "release", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 's' or keycode[1] == 'down':
+            self.ids.down.state = "normal"
+            self.update_arrows("down", "release", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 'a' or keycode[1] == 'left':
+            self.ids.left.state = "normal"
+            self.update_arrows("left", "release", self.ids.speed, self.ids.angle, self.ids.send)
+
+        if keycode[1] == 'd' or keycode[1] == 'right':
+            self.ids.right.state = "normal"
+            self.update_arrows("right", "release", self.ids.speed, self.ids.angle, self.ids.send)
+        return True
+
+    def reset_tabs(self):
+        self.ids.right_slider.value = 0
+        self.ids.left_slider.value = 0
+        self.ids.speed.value = 0
+        self.ids.angle.value = 0
+        self.ids.send.text = '[000000]'
 
 class SettingPage(Screen):
     pass
