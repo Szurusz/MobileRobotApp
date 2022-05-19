@@ -104,23 +104,20 @@ class MainPage(Screen):
         sensor3_widget = self.manager.get_screen("setting").ids.sensor3_widget
         sensor4_widget = self.manager.get_screen("setting").ids.sensor4_widget
         sensor5_widget = self.manager.get_screen("setting").ids.sensor5_widget
-        match str(data[0]):
-            case "0":
-                state_label.text = "Dane odczytano prawidłowo."
-            case "1":
-                state_label.text = "Brak znaku kończącego ramkę przed znakiem rozpoczynającym."
-            case "2":
-                state_label.text = "Ramka zbyt długa."
-            case "3":
-                state_label.text = "Brak znaku rozpoczynającego ramkę przed znakiem kończącym."
-            case "4":
-                state_label.text = "Zła wielkość ramki."
-            case "5":
-                state_label.text = "Błąd dekodowania danych"
-            case "6":
-                state_label.text = "Błąd połączenia z robotem Pololu3Pi"
-            case _:
-                pass
+        if str(data[0]) == "0":
+            state_label.text = "Dane odczytano prawidłowo."
+        if str(data[0]) == "1":
+            state_label.text = "Brak znaku kończącego ramkę przed znakiem rozpoczynającym."
+        if str(data[0]) == "2":
+            state_label.text = "Ramka zbyt długa."
+        if str(data[0]) == "3":
+            state_label.text = "Brak znaku rozpoczynającego ramkę przed znakiem kończącym."
+        if str(data[0]) == "4":
+            state_label.text = "Zła wielkość ramki."
+        if str(data[0]) == "5":
+            state_label.text = "Błąd dekodowania danych"
+        if str(data[0]) == "6":
+            state_label.text = "Błąd połączenia z robotem Pololu3Pi"
         battery_widget.text = str(data[1])+"mV"
         sensor1_widget.level = data[2] / max_sensor_level
         sensor2_widget.level = data[3] / max_sensor_level
@@ -172,30 +169,24 @@ class MainPage(Screen):
 
     def update_arrows(self, button, on_state, speed_slider, angle_slider, data):
         if on_state == "press":
-            match button:
-                case "up":
-                    GlobalShared.info_arrows[0] = 1
-                case "left":
-                    GlobalShared.info_arrows[1] = 1
-                case "down":
-                    GlobalShared.info_arrows[2] = 1
-                case "right":
-                    GlobalShared.info_arrows[3] = 1
-                case _:
-                    pass
+            if button == "up":
+                GlobalShared.info_arrows[0] = 1
+            if button == "left":
+                GlobalShared.info_arrows[1] = 1
+            if button == "down":
+                GlobalShared.info_arrows[2] = 1
+            if button == "right":
+                GlobalShared.info_arrows[3] = 1
 
         elif on_state == "release":
-            match button:
-                case "up":
-                    GlobalShared.info_arrows[0] = 0
-                case "left":
-                    GlobalShared.info_arrows[1] = 0
-                case "down":
-                    GlobalShared.info_arrows[2] = 0
-                case "right":
-                    GlobalShared.info_arrows[3] = 0
-                case _:
-                    pass
+            if button == "up":
+                GlobalShared.info_arrows[0] = 0
+            if button == "left":
+                GlobalShared.info_arrows[1] = 0
+            if button == "down":
+                GlobalShared.info_arrows[2] = 0
+            if button == "right":
+                GlobalShared.info_arrows[3] = 0
 
         if GlobalShared.info_arrows == [1, 0, 0, 0]:  # góra
             speed = int(speed_slider.value)
@@ -345,6 +336,7 @@ class MainPage(Screen):
         self.ids.speed.value = 0
         self.ids.angle.value = 0
         self.ids.send.text = '[000000]'
+
 
 class SettingPage(Screen):
     pass
