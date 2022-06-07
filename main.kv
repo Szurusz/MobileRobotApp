@@ -72,7 +72,6 @@ WindowManager:
         orientation: 'vertical'
         spacing: "20dp"
         padding: ("20dp", "20dp", "20dp", "20dp")
-
         AnchorLayout:
             anchor_y: 'top'
             size: 100, "50dp"
@@ -81,7 +80,6 @@ WindowManager:
                 anchor_x: 'left'
                 anchor_y: 'top'
                 size_hint_x: 1
-
                 Button:
                     text: "rozłącz"
                     size: "50dp", "50dp"
@@ -93,7 +91,6 @@ WindowManager:
                 anchor_x: 'right'
                 anchor_y: 'top'
                 size_hint_x: 1
-
                 Button:
                     text: "Info"
                     size: "50dp", "50dp"
@@ -171,91 +168,133 @@ WindowManager:
                         root.update_led2_value(self.state, send)
 
             AnchorLayout:
-                anchor_y: "top"
+                anchor_y: 'top'
                 TabbedPanel:
                     id: tabs
-                    size: "50dp","200dp"
-                    size_hint: 1, None
-                    tab_pos: 'bottom_mid'
+                    size: "50dp","300dp"
+                    size_hint: 1, 1
+                    tab_pos: "bottom_mid"
                     do_default_tab: False
                     TabbedPanelItem:
                         id: sliders
                         text: "Suwaki"
                         on_press: root.reset_tabs()
                         BoxLayout:
-                            padding: ("20dp", "40dp", "20dp", "20dp")
-                            orientation: "vertical"
-                            spacing: "50dp"
-                            size_hint: 1 , None
-                            size: 100, "140dp"
+                            padding: ("20dp", "20dp", "20dp", "20dp")
+                            spacing: "40dp"
+                            size_hint: 1 , 1
                             pos_hint: {"center_x": .5, "center_y": .5}
                             Slider:
                                 id: left_slider
                                 min: -128
                                 max: 127
                                 step: 1
+                                size: self.size
                                 on_value: root.update_left_slider_values(left_slider, send)
-                                orientation: 'horizontal'
+                                orientation: "vertical"
                             Slider:
                                 id: right_slider
                                 min: -128
                                 max: 127
                                 step: 1
                                 on_value: root.update_right_slider_values(right_slider, send)
-                                orientation: 'horizontal'
+                                orientation: "vertical"
                     TabbedPanelItem:
                         id: arrows
                         text: "Strzałki"
                         on_press: root.reset_tabs()
-                        BoxLayout:
-                            padding: ("20dp", "20dp", "20dp", "20dp")
-                            Slider:
-                                id: speed
-                                min: 0
-                                max: 127
-                                step: 1
-                                orientation: "vertical"
+                        AnchorLayout:
+                            anchor_y: "top"
                             BoxLayout:
-                                spacing: "10dp"
+                                size_hint: 1 , 1
+                                size: 100, "150dp"
                                 orientation: "vertical"
-                                pos_hint: {"center_x": .5, "center_y": .5}
-                                Button:
-                                    id: up
-                                    text: "up"
-                                    on_press:
-                                        root.update_arrows("up", "press", speed, angle, send)
-                                    on_release:
-                                        root.update_arrows("up", "release", speed, angle, send)
+                                spacing: "15dp"
                                 BoxLayout:
                                     spacing: "10dp"
-                                    pos_hint: {"center_x": .5, "center_y": .5}
-                                    Button:
-                                        id: left
-                                        text: "left"
-                                        on_press:
-                                            root.update_arrows("left", "press", speed, angle, send)
-                                        on_release:
-                                            root.update_arrows("left", "release", speed, angle, send)
-                                    Button:
-                                        id: down
-                                        text: "down"
-                                        on_press:
-                                            root.update_arrows("down", "press", speed, angle, send)
-                                        on_release:
-                                            root.update_arrows("down", "release", speed, angle, send)
-                                    Button:
-                                        id: right
-                                        text: "right"
-                                        on_press:
-                                            root.update_arrows("right", "press", speed, angle, send)
-                                        on_release:
-                                            root.update_arrows("right", "release", speed, angle, send)
-                            Slider:
-                                id: angle
-                                min: 0.1
-                                max: 0.9
-                                step: 0.1
-                                orientation: "vertical"
+                                    BoxLayout:
+                                        size: "300dp", "110dp"
+                                        size_hint: 1, 1
+                                        orientation: "vertical"
+                                        spacing: "10dp"
+                                        Button:
+                                            id: up
+                                            size_hint_x: None
+                                            width: self.height
+                                            text: "up"
+                                            pos_hint: {"center_x": .5}
+                                            on_press:
+                                                root.update_arrows("up", "press", speed, angle, send)
+                                            on_release:
+                                                root.update_arrows("up", "release", speed, angle, send)
+                                        BoxLayout:
+                                            size_hint: 1, 1
+                                            spacing: "10dp"
+                                            size_hint_x: None
+                                            width: 3*self.height+20
+                                            pos_hint: {"center_x": .5}
+                                            Button:
+                                                id: left
+                                                size_hint_x: None
+                                                width: self.height
+                                                text: "left"
+                                                on_press:
+                                                    root.update_arrows("left", "press", speed, angle, send)
+                                                on_release:
+                                                    root.update_arrows("left", "release", speed, angle, send)
+                                            Button:
+                                                id: down
+                                                size_hint_x: None
+                                                width: self.height
+                                                text: "down"
+                                                on_press:
+                                                    root.update_arrows("down", "press", speed, angle, send)
+                                                on_release:
+                                                    root.update_arrows("down", "release", speed, angle, send)
+                                            Button:
+                                                id: right
+                                                size_hint_x: None
+                                                width: self.height
+                                                text: "right"
+                                                on_press:
+                                                    root.update_arrows("right", "press", speed, angle, send)
+                                                on_release:
+                                                    root.update_arrows("right", "release", speed, angle, send)
+                                BoxLayout:
+                                    spacing: "1dp"
+                                    orientation: "vertical"
+                                    BoxLayout:
+                                        size: "100dp", "130dp"
+                                        size_hint: 0.8, 1
+                                        orientation: "horizontal"
+                                        pos_hint: {"center_x": 0.5}
+                                        spacing: "15dp"
+                                        Label:
+                                            text: "speed"
+                                            size: "20dp", "20dp"
+                                            size_hint: None, None
+                                        Slider:
+                                            id: speed
+                                            min: 0
+                                            max: 127
+                                            step: 1
+                                            orientation: "horizontal"
+                                    BoxLayout:
+                                        size: "100dp", "130dp"
+                                        size_hint: 0.8, 1
+                                        orientation: "horizontal"
+                                        pos_hint: {"center_x": 0.5}
+                                        spacing: "15dp"
+                                        Label:
+                                            text: "rot"
+                                            size: "20dp","20dp"
+                                            size_hint: None, None
+                                        Slider:
+                                            id: angle
+                                            min: 0
+                                            max: 0.9
+                                            step: 0.1
+                                            orientation: "horizontal"
 
 <SettingPage>:
     name: "setting"
@@ -280,7 +319,6 @@ WindowManager:
         # d007 - max; 2000 - min
             spacing: "25dp"
             orientation: "vertical"
-
             BoxLayout:
                 orientation: "vertical"
                 size: "80dp", "50dp"

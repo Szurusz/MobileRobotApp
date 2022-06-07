@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
+# zmiany interfejsu:
+# slidery w pionie
+# większe strzałki (i slidery na dole)
+# spróbuj z joystickiem
+# jak już z joystickiem to może i z żyroskopem???
+
 from kivy.clock import Clock
 
 import GlobalShared
 import threading
 import time
-import kivy
 from socket import *
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
 
-
-# warunek rozmiaru okna dla systemów innych niż android
-if kivy.platform != 'android' or kivy.platform != 'ios':
-    Window.size = (700, 600)
+# do robota 192.168.2.(numer robota); do matlaba "127.0.0.1"
 
 
 class StartPage(Screen):
@@ -24,9 +26,9 @@ class StartPage(Screen):
             # deklaracja socketu
             global s
             s = socket(AF_INET, SOCK_STREAM)
-            s.connect((self.manager.get_screen("start").ids.IP.text, 8000))
-            # do robota 192.168.2.(numer robota); do matlaba "127.0.0.1"
             s.settimeout(10)
+            s.connect((self.manager.get_screen("start").ids.IP.text, 8000))
+            s.settimeout(None)
             widget.text = "Połączono"
             self.manager.current = "main"
             GlobalShared.online = True
@@ -42,13 +44,6 @@ class StartPage(Screen):
 
 
 class MainPage(Screen):
-
-    def __init__(self, **kwargs):
-        super(MainPage, self).__init__(**kwargs)
-        if kivy.platform != 'android' or kivy.platform != 'ios':
-            self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-            self._keyboard.bind(on_key_down=self._on_keyboard_down)
-            self._keyboard.bind(on_key_up=self._on_keyboard_up)
 
     def lost_connection(self):
         self.manager.current = 'start'
@@ -78,6 +73,10 @@ class MainPage(Screen):
                 data = s.recv(1024)
                 recv_data.text = data.decode("utf-8")
                 self.update_widgets(recv_data.text)
+                # to zakomentować dla aplikacji na telefon
+                self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+                self._keyboard.bind(on_key_down=self._on_keyboard_down)
+                self._keyboard.bind(on_key_up=self._on_keyboard_up)
                 if not recv_data:
                     GlobalShared.online = False
         except Exception:
