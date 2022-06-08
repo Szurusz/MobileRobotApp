@@ -48,11 +48,10 @@ class MainPage(Screen):
     def lost_connection(self):
         self.manager.current = 'start'
         self.manager.transition.direction = 'right'
-        self.manager.get_screen("start").ids.is_connect.text = "Utracono połączenie"
+        self.manager.get_screen("start").ids.is_connect.text = "Rozłączono"
+        s.close()
 
     def disconnect_button(self):
-        self.manager.current = 'start'
-        self.manager.get_screen("start").ids.is_connect.text = "Rozłączono"
         GlobalShared.online = False
         s.close()
 

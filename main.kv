@@ -10,14 +10,18 @@ WindowManager:
     name: "start"
     on_enter: root.reset_data()
     AnchorLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'images/tlo.jpg'
         anchor_x: 'center'
         anchor_y: 'center'
-
 
         BoxLayout:
             orientation: 'vertical'
             size_hint: None, None
-            size: "320dp", "100dp"
+            size: "320dp", "130dp"
             pos_hint: {'center_x':.5, 'center_y': .5}
             spacing: "50dp"
             AnchorLayout:
@@ -25,13 +29,15 @@ WindowManager:
                 size_hint_y: 1
                 Label:
                     text: "Wprowadź IP:"
+                    font_name: "Spartan_bold"
+                    font_size: "35dp"
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos: self.pos
             AnchorLayout:
                 anchor_y: 'center'
                 BoxLayout:
-                    size_hint: .6, .2
+                    size_hint: .65, .2
                     pos_hint: {'center_x':.5, 'center_y': .5}
                     spacing: "20dp"
                     AnchorLayout:
@@ -42,10 +48,13 @@ WindowManager:
                             multiline: False
                             halign: 'center'
                             valign: 'center'
-                            size: "150dp", "40dp"
+                            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                            size: "150dp", "35dp"
                             pos: self.pos
                             size_hint: None, None
-                            on_touch_down: IP.text = ''
+                            font_name: "Spartan_light"
+                            font_size: "25dp"
+                            on_double_tap: IP.text = ''
                     AnchorLayout:
                         anchor_x: 'right'
                         size_hint_x: None
@@ -53,7 +62,9 @@ WindowManager:
                             pos: self.pos
                             size: "40dp", "40dp"
                             size_hint: None, None
-                            text: "Połącz"
+                            background_normal: 'images/connect_normal.png'
+                            background_down: 'images/connect_down.png'
+                            border: (1, 1, 1, 1)
                             on_press:
                                 root.connect_button(is_connect)
                                 root.manager.get_screen("main").thread_send()
@@ -65,6 +76,8 @@ WindowManager:
                     id: is_connect
                     size: "150dp", "30dp"
                     size_hint: None, None
+                    font_name: "Spartan_bold"
+                    font_size: "25dp"
 
 <MainPage>:
     name: "main"
@@ -72,6 +85,11 @@ WindowManager:
         orientation: 'vertical'
         spacing: "20dp"
         padding: ("20dp", "20dp", "20dp", "20dp")
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'images/tlo.jpg'
         AnchorLayout:
             anchor_y: 'top'
             size: 100, "50dp"
@@ -81,9 +99,11 @@ WindowManager:
                 anchor_y: 'top'
                 size_hint_x: 1
                 Button:
-                    text: "rozłącz"
                     size: "50dp", "50dp"
                     size_hint: None, None
+                    background_normal: 'images/disconnect_normal.png'
+                    background_down: 'images/disconnect_down.png'
+                    border: (1, 1, 1, 1)
                     on_press:
                         root.disconnect_button()
                         root.manager.transition.direction = 'right'
@@ -92,9 +112,11 @@ WindowManager:
                 anchor_y: 'top'
                 size_hint_x: 1
                 Button:
-                    text: "Info"
                     size: "50dp", "50dp"
                     size_hint: None, None
+                    background_normal: 'images/settings_normal.png'
+                    background_down: 'images/settings_down.png'
+                    border: (1, 1, 1, 1)
                     on_press:
                         app.root.current = 'setting'
                         root.manager.transition.direction = 'left'
@@ -113,6 +135,8 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
+                    font_name: "Spartan_light"
+                    font_size: "25dp"
                     text: 'Otrzymywana ramka danych:'
                 Label:
                     id: recv
@@ -121,6 +145,8 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
+                    font_name: "Spartan_light"
+                    font_size: "20dp"
                     text: ''
 
             BoxLayout:
@@ -135,15 +161,20 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
+                    font_name: "Spartan_light"
+                    font_size: "25dp"
                     text: 'Przesyłana ramka danych:'
                 TextInput:
                     id: send
                     multiline: False
                     halign: 'center'
                     valign: 'middle'
-                    size: "150dp", "30dp"
+                    padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                    size: "150dp", "33dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
+                    font_name: "Spartan_light"
+                    font_size: "20dp"
                     text: '[000000]'
 
             BoxLayout:
@@ -154,6 +185,8 @@ WindowManager:
                 ToggleButton:
                     id: LED1
                     group: 'LEDs'
+                    font_name: "Spartan_Bold"
+                    font_size: "25dp"
                     text: "LED1"
                     size: "50dp", "50dp"
                     on_state:
@@ -162,6 +195,8 @@ WindowManager:
                 ToggleButton:
                     id: LED2
                     group: 'LEDs'
+                    font_name: "Spartan_Bold"
+                    font_size: "25dp"
                     text: "LED2"
                     size: "50dp", "50dp"
                     on_state:
@@ -175,13 +210,17 @@ WindowManager:
                     size_hint: 1, 1
                     tab_pos: "bottom_mid"
                     do_default_tab: False
+                    background_color: 1, 1, 1, 0.6
                     TabbedPanelItem:
                         id: sliders
+                        font_name: "Spartan_Bold"
+                        font_size: "20dp"
                         text: "Suwaki"
                         on_press: root.reset_tabs()
                         BoxLayout:
-                            padding: ("20dp", "20dp", "20dp", "20dp")
-                            spacing: "40dp"
+                            padding: ("20dp", "10dp", "20dp", "10dp")
+                            spacing: "10dp"
+                            size: 100, "150dp"
                             size_hint: 1 , 1
                             pos_hint: {"center_x": .5, "center_y": .5}
                             Slider:
@@ -192,6 +231,12 @@ WindowManager:
                                 size: self.size
                                 on_value: root.update_left_slider_values(left_slider, send)
                                 orientation: "vertical"
+                            Image:
+                                source: "images/wheel.png"
+                                size: "200dp","200dp"
+                                size_hint: None, None
+                                border: 1, 1, 1, 1
+                                pos_hint: {"center_x": .5, "center_y": .5}
                             Slider:
                                 id: right_slider
                                 min: -128
@@ -202,6 +247,8 @@ WindowManager:
                     TabbedPanelItem:
                         id: arrows
                         text: "Strzałki"
+                        font_name: "Spartan_Bold"
+                        font_size: "20dp"
                         on_press: root.reset_tabs()
                         AnchorLayout:
                             anchor_y: "top"
@@ -217,11 +264,13 @@ WindowManager:
                                         size_hint: 1, 1
                                         orientation: "vertical"
                                         spacing: "10dp"
-                                        Button:
+                                        ToggleButton:
                                             id: up
                                             size_hint_x: None
                                             width: self.height
-                                            text: "up"
+                                            background_normal: 'images/up_normal.png'
+                                            background_down: 'images/up_down.png'
+                                            border: (1, 1, 1, 1)
                                             pos_hint: {"center_x": .5}
                                             on_press:
                                                 root.update_arrows("up", "press", speed, angle, send)
@@ -237,16 +286,20 @@ WindowManager:
                                                 id: left
                                                 size_hint_x: None
                                                 width: self.height
-                                                text: "left"
+                                                background_normal: 'images/left_normal.png'
+                                                background_down: 'images/left_down.png'
+                                                border: (1, 1, 1, 1)
                                                 on_press:
                                                     root.update_arrows("left", "press", speed, angle, send)
                                                 on_release:
                                                     root.update_arrows("left", "release", speed, angle, send)
-                                            Button:
+                                            ToggleButton:
                                                 id: down
                                                 size_hint_x: None
                                                 width: self.height
-                                                text: "down"
+                                                background_normal: 'images/down_normal.png'
+                                                background_down: 'images/down_down.png'
+                                                border: (1, 1, 1, 1)
                                                 on_press:
                                                     root.update_arrows("down", "press", speed, angle, send)
                                                 on_release:
@@ -255,13 +308,15 @@ WindowManager:
                                                 id: right
                                                 size_hint_x: None
                                                 width: self.height
-                                                text: "right"
+                                                background_normal: 'images/right_normal.png'
+                                                background_down: 'images/right_down.png'
+                                                border: (0.5, 0.5, 0.5, 0.5)
                                                 on_press:
                                                     root.update_arrows("right", "press", speed, angle, send)
                                                 on_release:
                                                     root.update_arrows("right", "release", speed, angle, send)
                                 BoxLayout:
-                                    spacing: "1dp"
+                                    spacing: "5dp"
                                     orientation: "vertical"
                                     BoxLayout:
                                         size: "100dp", "130dp"
@@ -269,10 +324,11 @@ WindowManager:
                                         orientation: "horizontal"
                                         pos_hint: {"center_x": 0.5}
                                         spacing: "15dp"
-                                        Label:
-                                            text: "speed"
-                                            size: "20dp", "20dp"
+                                        Image:
+                                            source: "images/speed.png"
+                                            size: "30dp", "30dp"
                                             size_hint: None, None
+                                            pos_hint: {"center_y": 0.5}
                                         Slider:
                                             id: speed
                                             min: 0
@@ -285,10 +341,11 @@ WindowManager:
                                         orientation: "horizontal"
                                         pos_hint: {"center_x": 0.5}
                                         spacing: "15dp"
-                                        Label:
-                                            text: "rot"
-                                            size: "20dp","20dp"
+                                        Image:
+                                            source: "images/rotate.png"
+                                            size: "30dp", "30dp"
                                             size_hint: None, None
+                                            pos_hint: {"center_y": 0.5}
                                         Slider:
                                             id: angle
                                             min: 0
@@ -298,9 +355,14 @@ WindowManager:
 
 <SettingPage>:
     name: "setting"
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'images/tlo.jpg'
     BoxLayout:
         orientation: "vertical"
-        spacing: "20dp"
+        spacing: "30dp"
         padding: ("20dp", "20dp", "20dp", "20dp")
         AnchorLayout:
             anchor_y: "top"
@@ -308,9 +370,11 @@ WindowManager:
             size: 100, "50dp"
             size_hint_y: None
             Button:
-                text: "Info"
                 size: "50dp", "50dp"
                 size_hint: None, None
+                background_normal: 'images/return_normal.png'
+                background_down: 'images/return_down.png'
+                border: 1, 1, 1, 1
                 pos_hint: {'left': 1, 'top': 1}
                 on_press:
                     app.root.current = 'main'
@@ -324,13 +388,15 @@ WindowManager:
                 size: "80dp", "50dp"
                 size_hint: 1, None
                 pos_hint: {"center_x": 0.5}
-                spacing: "0dp"
+                spacing: "7dp"
                 BoxLayout:
                     size: "20dp", "10dp"
                     size_hint: 1, None
                     Label:
                         id: state_info
                         text: "Stan robota:"
+                        font_name: "Spartan_light"
+                        font_size: "25dp"
                         size: "20dp", "10dp"
                 BoxLayout:
                     size: "20dp", "40dp"
@@ -342,6 +408,8 @@ WindowManager:
                         text: ''
                         size_hint: 0.5, 1
                         text_size: self.size
+                        font_name: "Spartan_light"
+                        font_size: "20dp"
                         halign: 'center'
 
             BoxLayout:
@@ -352,56 +420,57 @@ WindowManager:
                 Label:
                     id: battery_info
                     text: "Poziom nałdowania robota:"
+                    font_name: "Spartan_light"
+                    font_size: "25dp"
                 Label:
                     id: battery_widget
                     text: ''
+                    font_name: "Spartan_light"
+                    font_size: "20dp"
             AnchorLayout:
                 anchor_y: "top"
                 BoxLayout:
                     orientation: "vertical"
-                    spacing: "10dp"
+                    spacing: "15dp"
                     size_hint: 1 , None
-                    size: 100, "180dp"
+                    size: 100, "210dp"
+                    padding: ["25dp", "0dp", "25dp", "0dp"]
                     Label:
                         id: sensors_info
                         size: "150dp", "30dp"
                         text: "Odczyt z sensorów światła:"
+                        font_name: "Spartan_light"
+                        font_size: "25dp"
                     WaterFill:
                         id: sensor1_widget
-                        color: 1, 1, 0
                         level: 0
-                        size: 100, "20dp"
+                        size: 100, "25dp"
                         size_hint: 1, None
                     WaterFill:
                         id: sensor2_widget
-                        color: 1, 1, 0
                         level: 0
-                        size: 100, "20dp"
+                        size: 100, "25dp"
                         size_hint: 1, None
                     WaterFill:
                         id: sensor3_widget
-                        color: 1, 1, 0
                         level: 0
-                        size: 100, "20dp"
+                        size: 100, "25dp"
                         size_hint: 1, None
                     WaterFill:
                         id: sensor4_widget
-                        color: 1, 1, 0
                         level: 0
-                        size: 100, "20dp"
+                        size: 100, "25dp"
                         size_hint: 1, None
                     WaterFill:
                         id: sensor5_widget
-                        color: 1, 1, 0
                         level: 0
-                        size: 100, "20dp"
+                        size: 100, "25dp"
                         size_hint: 1, None
 
 <WaterFill@Widget>:
-    level: 0.1
+    level: 0
     width: root.width
     size_hint: 1, 1
-    color: 0, 0, 1
     canvas:
         StencilPush
         Rectangle:
@@ -411,7 +480,7 @@ WindowManager:
         StencilUse
 
         Color:
-            rgb: 1, 1, 0
+            rgb: self.level, 1-self.level , 0
         Rectangle:
             pos: root.pos
             size: (root.level*root.width, root.height)
