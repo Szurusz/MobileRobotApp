@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# zmiany interfejsu:
-# slidery w pionie
-# większe strzałki (i slidery na dole)
-# spróbuj z joystickiem
-# jak już z joystickiem to może i z żyroskopem???
-
 from kivy.clock import Clock
 
 import GlobalShared
