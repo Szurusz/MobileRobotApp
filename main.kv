@@ -14,7 +14,7 @@ WindowManager:
             Rectangle:
                 pos: self.pos
                 size: self.size
-                source: 'images/tlo.jpg'
+                source: 'images/background.png'
         anchor_x: 'center'
         anchor_y: 'center'
 
@@ -29,7 +29,7 @@ WindowManager:
                 size_hint_y: 1
                 Label:
                     text: "Wprowadź IP:"
-                    font_name: "Spartan_bold"
+                    font_name: "Spartan_Bold"
                     font_size: "35dp"
                     size: "150dp", "30dp"
                     size_hint: None, None
@@ -48,11 +48,11 @@ WindowManager:
                             multiline: False
                             halign: 'center'
                             valign: 'center'
-                            padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                            #padding: [0, self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0, 0]
                             size: "150dp", "35dp"
                             pos: self.pos
                             size_hint: None, None
-                            font_name: "Spartan_light"
+                            font_name: "Spartan_Light"
                             font_size: "25dp"
                             on_double_tap: IP.text = ''
                     AnchorLayout:
@@ -76,7 +76,7 @@ WindowManager:
                     id: is_connect
                     size: "150dp", "30dp"
                     size_hint: None, None
-                    font_name: "Spartan_bold"
+                    font_name: "Spartan_Bold"
                     font_size: "25dp"
 
 <MainPage>:
@@ -89,7 +89,7 @@ WindowManager:
             Rectangle:
                 pos: self.pos
                 size: self.size
-                source: 'images/tlo.jpg'
+                source: 'images/background.png'
         AnchorLayout:
             anchor_y: 'top'
             size: 100, "50dp"
@@ -135,7 +135,7 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "25dp"
                     text: 'Otrzymywana ramka danych:'
                 Label:
@@ -145,7 +145,7 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "20dp"
                     text: ''
 
@@ -161,7 +161,7 @@ WindowManager:
                     size: "150dp", "30dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "25dp"
                     text: 'Przesyłana ramka danych:'
                 TextInput:
@@ -169,11 +169,11 @@ WindowManager:
                     multiline: False
                     halign: 'center'
                     valign: 'middle'
-                    padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+                    #padding: [0, self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0, 0]
                     size: "150dp", "33dp"
                     size_hint: None, None
                     pos_hint: {"center_x": .5}
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "20dp"
                     text: '[000000]'
 
@@ -184,7 +184,7 @@ WindowManager:
                 pos_hint: {"center_x": .5, "center_y": .2}
                 ToggleButton:
                     id: LED1
-                    group: 'LEDs'
+                    #group: 'LEDs'
                     font_name: "Spartan_Bold"
                     font_size: "25dp"
                     text: "LED1"
@@ -194,7 +194,7 @@ WindowManager:
 
                 ToggleButton:
                     id: LED2
-                    group: 'LEDs'
+                    #group: 'LEDs'
                     font_name: "Spartan_Bold"
                     font_size: "25dp"
                     text: "LED2"
@@ -272,9 +272,10 @@ WindowManager:
                                             background_down: 'images/up_down.png'
                                             border: (1, 1, 1, 1)
                                             pos_hint: {"center_x": .5}
-                                            on_press:
+                                            on_state:
+                                                if self.state == "down": \
                                                 root.update_arrows("up", "press", speed, angle, send)
-                                            on_release:
+                                                if self.state == "normal": \
                                                 root.update_arrows("up", "release", speed, angle, send)
                                         BoxLayout:
                                             size_hint: 1, 1
@@ -300,9 +301,10 @@ WindowManager:
                                                 background_normal: 'images/down_normal.png'
                                                 background_down: 'images/down_down.png'
                                                 border: (1, 1, 1, 1)
-                                                on_press:
+                                                on_state:
+                                                    if self.state == "down": \
                                                     root.update_arrows("down", "press", speed, angle, send)
-                                                on_release:
+                                                    if self.state == "normal": \
                                                     root.update_arrows("down", "release", speed, angle, send)
                                             Button:
                                                 id: right
@@ -310,7 +312,7 @@ WindowManager:
                                                 width: self.height
                                                 background_normal: 'images/right_normal.png'
                                                 background_down: 'images/right_down.png'
-                                                border: (0.5, 0.5, 0.5, 0.5)
+                                                border: (1, 1, 1, 1)
                                                 on_press:
                                                     root.update_arrows("right", "press", speed, angle, send)
                                                 on_release:
@@ -334,6 +336,7 @@ WindowManager:
                                             min: 0
                                             max: 127
                                             step: 1
+                                            on_value: root.actualization_value_of_speed()
                                             orientation: "horizontal"
                                     BoxLayout:
                                         size: "100dp", "130dp"
@@ -359,7 +362,7 @@ WindowManager:
         Rectangle:
             pos: self.pos
             size: self.size
-            source: 'images/tlo.jpg'
+            source: 'images/background.png'
     BoxLayout:
         orientation: "vertical"
         spacing: "30dp"
@@ -395,7 +398,7 @@ WindowManager:
                     Label:
                         id: state_info
                         text: "Stan robota:"
-                        font_name: "Spartan_light"
+                        font_name: "Spartan_Light"
                         font_size: "25dp"
                         size: "20dp", "10dp"
                 BoxLayout:
@@ -408,7 +411,7 @@ WindowManager:
                         text: ''
                         size_hint: 0.5, 1
                         text_size: self.size
-                        font_name: "Spartan_light"
+                        font_name: "Spartan_Light"
                         font_size: "20dp"
                         halign: 'center'
 
@@ -420,12 +423,12 @@ WindowManager:
                 Label:
                     id: battery_info
                     text: "Poziom nałdowania robota:"
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "25dp"
                 Label:
                     id: battery_widget
                     text: ''
-                    font_name: "Spartan_light"
+                    font_name: "Spartan_Light"
                     font_size: "20dp"
             AnchorLayout:
                 anchor_y: "top"
@@ -439,7 +442,7 @@ WindowManager:
                         id: sensors_info
                         size: "150dp", "30dp"
                         text: "Odczyt z sensorów światła:"
-                        font_name: "Spartan_light"
+                        font_name: "Spartan_Light"
                         font_size: "25dp"
                     WaterFill:
                         id: sensor1_widget

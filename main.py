@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from kivy.clock import Clock
-
 import GlobalShared
 import threading
 import time
@@ -119,23 +118,43 @@ class MainPage(Screen):
 
     def update_led1_value(self, state, data):
         if state == "down":
-            data_list = list(data.text)
-            data_list[2] = '2'
-            data.text = "".join(data_list)
+            if self.manager.get_screen("main").ids.LED2.state == "normal":
+                data_list = list(data.text)
+                data_list[2] = '2'
+                data.text = "".join(data_list)
+            elif self.manager.get_screen("main").ids.LED2.state == "down":
+                data_list = list(data.text)
+                data_list[2] = '3'
+                data.text = "".join(data_list)
         if state == "normal":
-            data_list = list(data.text)
-            data_list[2] = '0'
-            data.text = "".join(data_list)
+            if self.manager.get_screen("main").ids.LED2.state == "normal":
+                data_list = list(data.text)
+                data_list[2] = '0'
+                data.text = "".join(data_list)
+            elif self.manager.get_screen("main").ids.LED2.state == "down":
+                data_list = list(data.text)
+                data_list[2] = '1'
+                data.text = "".join(data_list)
 
     def update_led2_value(self, state, data):
         if state == "down":
-            data_list = list(data.text)
-            data_list[2] = '1'
-            data.text = "".join(data_list)
+            if self.manager.get_screen("main").ids.LED1.state == "normal":
+                data_list = list(data.text)
+                data_list[2] = '1'
+                data.text = "".join(data_list)
+            elif self.manager.get_screen("main").ids.LED1.state == "down":
+                data_list = list(data.text)
+                data_list[2] = '3'
+                data.text = "".join(data_list)
         if state == "normal":
-            data_list = list(data.text)
-            data_list[2] = '0'
-            data.text = "".join(data_list)
+            if self.manager.get_screen("main").ids.LED1.state == "normal":
+                data_list = list(data.text)
+                data_list[2] = '0'
+                data.text = "".join(data_list)
+            elif self.manager.get_screen("main").ids.LED1.state == "down":
+                data_list = list(data.text)
+                data_list[2] = '2'
+                data.text = "".join(data_list)
 
     def update_left_slider_values(self, slider, data):
         if slider.value < 0:
@@ -281,6 +300,15 @@ class MainPage(Screen):
             data_list[5] = '0'
             data_list[6] = '0'
             data.text = "".join(data_list)
+
+    def actualization_value_of_speed(self):
+        speed = self.manager.get_screen("main").ids.speed
+        angle = self.manager.get_screen("main").ids.angle
+        send = self.manager.get_screen("main").ids.send
+        if self.manager.get_screen("main").ids.up.state == "down":
+            self.update_arrows("up", "press", speed, angle, send)
+        if self.manager.get_screen("main").ids.down.state == "down":
+            self.update_arrows("down", "press", speed, angle, send)
 
     def _keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
