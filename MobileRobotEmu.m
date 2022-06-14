@@ -17,7 +17,7 @@ while ii <= data_count
     
     data = fscanf(t)
     pause(0.1);
-    fprintf(t, '[01c012D000F401E803DC05c0f7]');
+    fprintf(t, '[01c012200050008000B000D000]');
     
     ii=ii+1;
 end
