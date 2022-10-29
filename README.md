@@ -1,15 +1,5 @@
-<h1 align="center">Welcome to Simple TCP/IP Mobile Robot App 👋</h1>
-<p>
-  <a href="https://www.npmjs.com/package/Simple TCP/IP Mobile Robot App" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/Simple TCP/IP Mobile Robot App.svg">
-  </a>
-</p>
 
-> This project 
+# Simple TCP/IP Mobile Robot App
 
-## Show your support
+The project was created during the implementation of laboratories at the university. Its task was to familiarize students with TCP / IP communication and the methods of controlling mobile robots such as the pololu 3pi robot.
 
-Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
